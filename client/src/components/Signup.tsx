@@ -1,4 +1,5 @@
-import React, { MutableRefObject, useRef } from "react";
+import axios from "axios";
+import React, { useRef } from "react";
 
 const Signup = () => {
   const nameRef = useRef<HTMLInputElement>(null);
@@ -6,16 +7,47 @@ const Signup = () => {
   const phoneRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
-
-  const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
+  const submitHandler = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-  }
+    const name = nameRef.current?.value;
+    const email = emailRef.current?.value;
+    const phone = phoneRef.current?.value;
+    const password = passwordRef.current?.value;
+    let data;
+    try {
+      data = await axios.post("http://localhost:3000/user/sign-up", {
+        name,
+        email,
+        phone,
+        password,
+      });
+      data = data.data.message;
+      if (
+        nameRef.current &&
+        emailRef.current &&
+        phoneRef.current &&
+        passwordRef.current
+      ) {
+        nameRef.current.value = "";
+        emailRef.current.value = "";
+        phoneRef.current.value = "";
+        passwordRef.current.value = "";
+      }
+    } catch (err) {
+      data = (err as { response: { data: { message: string } } }).response.data
+        .message;
+    }
+    alert(data);
+  };
 
   return (
     <React.Fragment>
       <div className="border border-black 2xl:mx-[34%] xl:mx-[30%] lg:mx-[25%] sm:mx-[19%] mx-[15%] rounded-xl bg-violet-800 text-white">
         <h2 className="md:text-3xl text-2xl text-center m-2">Signup</h2>
-        <form className="md:text-2xl text-1xl text-center" onSubmit={submitHandler}>
+        <form
+          className="md:text-2xl text-1xl text-center"
+          onSubmit={submitHandler}
+        >
           <label htmlFor="name">Name: </label>
           <input
             id="name"
@@ -52,7 +84,12 @@ const Signup = () => {
             required
           />
           <br />
-          <button type="submit" className="border p-1 m-2 bg-violet-950 hover:bg-violet-700 rounded-xl">Submit</button>
+          <button
+            type="submit"
+            className="border p-1 m-2 bg-violet-950 hover:bg-violet-700 rounded-xl"
+          >
+            Submit
+          </button>
         </form>
       </div>
       <div className="md:text-2xl text-1xl text-center my-5">

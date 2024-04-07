@@ -1,7 +1,7 @@
 import User from "../models/user";
 import { hashPassword } from "./encrypt";
 
-const findUser = async (email: string) => {
+export const findUser = async (email: string) => {
   const user = await User.findOne({ where: { email: email.toLowerCase() } });
   if (user) {
     return true;
@@ -10,16 +10,25 @@ const findUser = async (email: string) => {
   }
 };
 
-export const addUser = async (
+export const addUser = (
   name: string,
   email: string,
   phone: number,
   password: string
 ) => {
-  try {
-    const hashedPassword = await hashPassword(password);
-    const user = await User.create({ name, email, phone, password: hashedPassword });
-  } catch {
-    
-  }
+  return new Promise( async (resolve, reject) => {
+    try {
+      const hashedPassword = await hashPassword(password);
+      const user = await User.create({
+        name,
+        email,
+        phone,
+        password: hashedPassword,
+      });
+      resolve(user);
+    } catch (err) {
+      console.log(err);
+      reject(err);
+    }
+  });
 };
