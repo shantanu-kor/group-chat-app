@@ -22,17 +22,10 @@ const Signup = () => {
         password,
       });
       data = data.data.message;
-      if (
-        nameRef.current &&
-        emailRef.current &&
-        phoneRef.current &&
-        passwordRef.current
-      ) {
-        nameRef.current.value = "";
-        emailRef.current.value = "";
-        phoneRef.current.value = "";
-        passwordRef.current.value = "";
-      }
+      (nameRef.current as { value: string }).value = "";
+      (emailRef.current as { value: string }).value = "";
+      (phoneRef.current as { value: string }).value = "";
+      (passwordRef.current as { value: string }).value = "";
     } catch (err) {
       data = (err as { response: { data: { message: string } } }).response.data
         .message;

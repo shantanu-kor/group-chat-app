@@ -7,7 +7,9 @@ import userRoutes from "./routes/user";
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: '*'
+}));
 app.use(bodyParser.json());
 
 app.use("/user", userRoutes);
