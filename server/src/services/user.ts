@@ -7,7 +7,16 @@ export const findUser = async (email: string) => {
     return true;
   } else {
     return false;
-  }
+  };
+};
+
+export const getUser = async (email: string) => {
+  const user = await User.findOne({ where: { email: email.toLowerCase() } });
+  if (user) {
+    return user;
+  } else {
+    return null;
+  };
 };
 
 export const addUser = (

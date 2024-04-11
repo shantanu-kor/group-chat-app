@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import { addUser, findUser } from "../services/user";
+import { addUser, findUser, getUser } from "../services/user";
+import { checkPassword, getJWT } from "../services/encrypt";
 
 export const signUp = async (
   req: Request,
@@ -19,6 +20,43 @@ export const signUp = async (
       res.status(201).json({
         success: true,
         message: "USER_CREATED_SUCCESSFULLY",
+      });
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+export const LogIn = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { email, password } = req.body;
+    const user: any = await getUser(email);
+    if (user) {
+      const exists = await checkPassword(password, user.password);
+      if (exists) {
+        res.json({
+          success: true,
+          message: "Login successful",
+          token: getJWT(user),
+        });
+      } else {
+        res.status(401).json({
+          success: false,
+          message: "User not authorized"
+        })
+      }
+    } else {
+      res.status(404).json({
+        success: false,
+        message: "User not found",
       });
     }
   } catch (err) {

@@ -26,6 +26,8 @@ const Signup = (props: any) => {
       (emailRef.current as { value: string }).value = "";
       (phoneRef.current as { value: string }).value = "";
       (passwordRef.current as { value: string }).value = "";
+      props.change();
+
     } catch (err) {
       data = (err as { response: { data: { message: string } } }).response.data
         .message;
