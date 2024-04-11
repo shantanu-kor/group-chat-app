@@ -1,9 +1,12 @@
 import axios from "axios";
 import React, { useRef } from "react";
+import { useDispatch } from "react-redux";
+import { authActions } from "../store/authSlice";
 
 const LogIn = (props: any) => {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
+  const dispatch = useDispatch();
 
   const submitHandler = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -15,9 +18,12 @@ const LogIn = (props: any) => {
         email,
         password,
       });
+      const token = data.data.token;
+      localStorage.setItem("token", token);
       data = data.data.message;
       (emailRef.current as { value: string }).value = "";
       (passwordRef.current as { value: string }).value = "";
+      dispatch(authActions.setTrue());
     } catch (err) {
       data = (err as { response: { data: { message: string } } }).response.data
         .message;
@@ -60,7 +66,10 @@ const LogIn = (props: any) => {
         </form>
       </div>
       <div className="md:text-2xl text-1xl text-center my-5">
-        <button className="border border-indigo-700 p-2 rounded-xl bg-indigo-700 text-white hover:bg-indigo-900" onClick={props.change}>
+        <button
+          className="border border-indigo-700 p-2 rounded-xl bg-indigo-700 text-white hover:bg-indigo-900"
+          onClick={props.change}
+        >
           New User? Signup
         </button>
       </div>
