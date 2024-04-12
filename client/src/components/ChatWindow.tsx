@@ -19,7 +19,6 @@ const ChatWindow = () => {
           },
         }
       );
-      alert(response.data.message);
       (messageRef as { current: { value: string } }).current.value = "";
     } catch (err) {
       alert(
@@ -30,25 +29,30 @@ const ChatWindow = () => {
   };
 
   useEffect(() => {
-    const func = async () => {
-      try {
-        const response: any = await axios.get(
-          "http://localhost:3000/message/get-messages",
-          {
-            headers: {
-              "Authorization": localStorage.getItem('token'),
+    const id = setInterval(() => {
+      const func = async () => {
+        try {
+          const response: any = await axios.get(
+            "http://localhost:3000/message/get-messages",
+            {
+              headers: {
+                "Authorization": localStorage.getItem('token'),
+              }
             }
-          }
-        );
-        setMessages(response.data.messages);
-      } catch (err) {
-        alert(
-          (err as { response: { data: { message: string } } }).response.data
-            .message
-        );
-      }
-    };
-    func();
+          );
+          setMessages(response.data.messages);
+        } catch (err) {
+          alert(
+            (err as { response: { data: { message: string } } }).response.data
+              .message
+          );
+        }
+      };
+      func();
+    }, 1000);
+    return () => {
+      clearInterval(id);
+    }
   }, []);
 
   return (
