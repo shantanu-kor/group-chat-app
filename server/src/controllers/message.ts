@@ -1,6 +1,6 @@
 import { NextFunction, Response } from "express";
 import { UserRequest } from "../middlewares/authentication";
-import { getMessage } from "../services/message";
+import { getMessage, getOldMessage } from "../services/message";
 
 export const addMessage = async (
   req: UserRequest,
@@ -27,9 +27,23 @@ export const getMessages = async (
   res: Response,
   next: NextFunction
 ) => {
-  const messages = await getMessage();
+  const messageId: any = req.query.messageId;
+  const messages = await getMessage(messageId);
   res.json({
     success: true,
-    messages
-  })
+    messages,
+  });
+};
+
+export const getOldMessages = async (
+  req: UserRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  const messageId: any = req.query.messageId;
+  const messages = await getOldMessage(messageId);
+  res.json({
+    success: true,
+    messages,
+  });
 };
