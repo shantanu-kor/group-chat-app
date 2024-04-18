@@ -15,7 +15,7 @@ const Signup = (props: any) => {
     const password = passwordRef.current?.value;
     let data;
     try {
-      data = await axios.post("http://localhost:3000/user/sign-up", {
+      data = await axios.post(`${import.meta.env.VITE_URL}/user/sign-up`, {
         name,
         email,
         phone,

@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { addUser, findUser, getUser } from "../services/user";
 import { checkPassword, getJWT } from "../services/encrypt";
+import { UserRequest } from "../middlewares/authentication";
 
 export const signUp = async (
   req: Request,
@@ -50,8 +51,8 @@ export const LogIn = async (
       } else {
         res.status(401).json({
           success: false,
-          message: "User not authorized"
-        })
+          message: "User not authorized",
+        });
       }
     } else {
       res.status(404).json({
@@ -59,6 +60,29 @@ export const LogIn = async (
         message: "User not found",
       });
     }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+export const getGroups = async (
+  req: UserRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const groups = await req.user.getGroups({
+      raw: true,
+      attributes: ["name"],
+    });
+    res.json({
+      success: true,
+      groups,
+    });
   } catch (err) {
     console.log(err);
     res.status(500).json({
