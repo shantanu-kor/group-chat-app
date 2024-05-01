@@ -23,7 +23,7 @@ export const createGroup = async (
     await transaction.commit();
     res.json({
       success: true,
-      message: "User created successfully",
+      message: "Group created successfully",
     });
   } catch (err) {
     await transaction.rollback();
@@ -91,6 +91,7 @@ export const getGroupDetails = async (
     const users = await group.getUsers({
       raw: true,
       attributes: ["email"],
+      joinTableAttributes: [],
       transaction,
     });
     data["users"] = users;

@@ -78,6 +78,7 @@ export const getGroups = async (
     const groups = await req.user.getGroups({
       raw: true,
       attributes: ["name"],
+      joinTableAttributes: [],
     });
     res.json({
       success: true,

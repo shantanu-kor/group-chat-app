@@ -21,6 +21,7 @@ const LogIn = (props: any) => {
       const token = data.data.token;
       localStorage.setItem("token", token);
       data = data.data.message;
+      dispatch(authActions.setEmail(email));
       (emailRef.current as { value: string }).value = "";
       (passwordRef.current as { value: string }).value = "";
       dispatch(authActions.setTrue());

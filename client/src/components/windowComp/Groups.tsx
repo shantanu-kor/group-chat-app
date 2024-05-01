@@ -1,10 +1,14 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 const Groups = () => {
   const [groups, setGroups] = useState([]);
   const groupRef = useRef<HTMLInputElement>(null);
+  const email = useSelector(
+    (state) => (state as { auth: { email: string } }).auth.email
+  );
 
   const func = async () => {
     try {
@@ -45,9 +49,21 @@ const Groups = () => {
           },
         }
       );
+      await axios.post(
+        `${import.meta.env.VITE_URL}/admin/make-admin`,
+        {
+          name,
+          email,
+        },
+        {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        }
+      );
       const data = response.data;
       alert(data.message);
-      (groupRef.current as {value: string}).value = '';
+      (groupRef.current as { value: string }).value = "";
     } catch (err: any) {
       alert(err.response.data.message);
     }
